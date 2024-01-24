@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @Table(name = "schedule") // 매핑할 테이블의 이름을 지정
 @NoArgsConstructor
-public class Schedule extends Timestamped{
+public class Schedule extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

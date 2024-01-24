@@ -45,7 +45,7 @@ public class ScheduleService {
     @Transactional
     public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto requestDto) {
         // 해당 schedule이 DB에 존재하는지 확인
-        Schedule schedule = findSchedule(id); // 이전 schedule
+        Schedule schedule = findSchedule(id);
 
         if (schedule.getPassword() != null && schedule.getPassword().equals(requestDto.getPassword())) {
             // schedule 수정
@@ -57,14 +57,14 @@ public class ScheduleService {
     }
 
     @Transactional
-    public ScheduleResponseDto deleteSchedule(Long id, ScheduleRequestDto requestDto) {
+    public void deleteSchedule(Long id, ScheduleRequestDto requestDto) {
         // 해당 schedule이 DB에 존재하는지 확인
         Schedule schedule = findSchedule(id);
 
         if (schedule.getPassword() != null && schedule.getPassword().equals(requestDto.getPassword())) {
             // schedule 삭제
             scheduleRepository.delete(schedule);
-            return new ScheduleResponseDto(schedule);
+
         } else {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
