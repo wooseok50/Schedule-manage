@@ -4,10 +4,14 @@ import com.sparta.schedule.dto.ScheduleRequestDto;
 import com.sparta.schedule.dto.ScheduleResponseDto;
 import com.sparta.schedule.entity.Schedule;
 import com.sparta.schedule.repository.ScheduleRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ScheduleService {
@@ -45,15 +49,16 @@ public class ScheduleService {
     @Transactional
     public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto requestDto) {
         // 해당 schedule이 DB에 존재하는지 확인
-        Schedule schedule = findSchedule(id); // 이전 schedule
+        Schedule schedule = findSchedule(id);
 
-        if (schedule.getPassword() != null && schedule.getPassword().equals(requestDto.getPassword())) {
-            // schedule 수정
-            schedule.update(requestDto);
-            return new ScheduleResponseDto(schedule);
-        } else {
+        if (schedule.getPassword() != null && !schedule.getPassword().equals(requestDto.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
+
+        // schedule 수정
+        schedule.update(requestDto);
+
+        return new ScheduleResponseDto(schedule);
     }
 
     @Transactional
@@ -61,13 +66,14 @@ public class ScheduleService {
         // 해당 schedule이 DB에 존재하는지 확인
         Schedule schedule = findSchedule(id);
 
-        if (schedule.getPassword() != null && schedule.getPassword().equals(requestDto.getPassword())) {
-            // schedule 삭제
-            scheduleRepository.delete(schedule);
-            return new ScheduleResponseDto(schedule);
-        } else {
+        if (schedule.getPassword() != null && !schedule.getPassword().equals(requestDto.getPassword())) {
             throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
+
+        // schedule 삭제
+        scheduleRepository.delete(schedule);
+
+        return new ScheduleResponseDto(schedule);
     }
 
     private Schedule findSchedule(Long id) {
